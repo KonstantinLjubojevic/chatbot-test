@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Praxis Dr. Musterzahnarzt</title>
+<style>
+  body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f7f7f7; }
+  header { background:#4caf50; color:white; padding: 20px; text-align:center; }
+  main { max-width: 900px; margin: 20px auto; background: white; padding: 20px; box-shadow: 0 0 10px #ccc; }
+  h1 { margin-top: 0; }
+  section { margin-bottom: 20px; }
+  footer { background:#333; color:#eee; text-align:center; padding: 10px; font-size: 0.9em; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Praxis Dr. Musterzahnarzt</h1>
+  <p>Ihre Zahnarztpraxis in Musterstadt</p>
+</header>
+
+<main>
+  <section>
+    <h2>Willkommen</h2>
+    <p>Wir bieten Ihnen professionelle Zahnbehandlung in freundlicher Atmosphäre.</p>
+  </section>
+
+  <section>
+    <h2>Kontakt & Öffnungszeiten</h2>
+    <p><strong>Adresse:</strong> Musterstraße 12, 12345 Musterstadt</p>
+    <p><strong>Telefon:</strong> 01234 567890</p>
+    <p><strong>E-Mail:</strong> info@musterzahnarzt.de</p>
+    <p><strong>Öffnungszeiten:</strong><br>
+      Mo - Fr: 08:00 - 18:00 Uhr<br>
+      Sa: 09:00 - 13:00 Uhr<br>
+      So: geschlossen
+    </p>
+  </section>
+</main>
+
+<footer>
+  &copy; 2025 Praxis Dr. Musterzahnarzt
+</footer>
+
+<!-- Dein Chatbot-Code hier -->
+<div id="chatbot" style="position: fixed; bottom: 20px; right: 20px; width: 300px; max-height: 500px; border: 1px solid #ccc; border-radius: 10px; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); font-family: sans-serif; overflow: hidden;">
+  <div style="background: #007bff; color: white; padding: 10px;">Zahnarzt-Chatbot</div>
+  <div id="chatbox" style="padding: 10px; height: 300px; overflow-y: auto;"></div>
+  <div style="padding: 10px; border-top: 1px solid #eee;">
+    <input id="userInput" type="text" placeholder="Frage stellen..." style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 5px;" />
+  </div>
+  <div style="padding: 10px;">
+    <button onclick="sendPreset('Wann habt ihr geöffnet?')">🕒 Öffnungszeiten</button>
+    <button onclick="sendPreset('Was kostet eine Prophylaxe?')">💰 Prophylaxe</button>
+    <button onclick="sendPreset('Was tun bei Zahnschmerzen am Backenzahn?')">😣 Zahnschmerzen</button>
+  </div>
+</div>
+
+<script>
+const chatbox = document.getElementById("chatbox");
+const input = document.getElementById("userInput");
+
+// HIER deinen echten Make.com Webhook-Link eintragen:
+const webhookUrl = "https://hook.us1.make.com/DEIN_WEBHOOK_LINK";
+
+function addMessage(sender, text) {
+  const msg = document.createElement("div");
+  msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
+  msg.style.marginBottom = "10px";
+  chatbox.appendChild(msg);
+  chatbox.scrollTop = chatbox.scrollHeight;
+}
+
+function sendPreset(message) {
+  input.value = message;
+  sendMessage();
+}
+
+async function sendMessage() {
+  const message = input.value.trim();
+  if (!message) return;
+
+  addMessage("Du", message);
+  input.value = "";
+
+  try {
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await response.json();
+    addMessage("Bot", data.response || "Keine Antwort erhalten.");
+  } catch (err) {
+    addMessage("Bot", "Fehler bei der Anfrage.");
+  }
+}
+
+input.addEventListener("keydown", function (e) {
+  if (e.key === "Enter") sendMessage();
+});
+</script>
+
+</body>
+</html>
